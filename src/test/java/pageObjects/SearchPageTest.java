@@ -1,5 +1,6 @@
 package pageObjects;
 
+import com.aventstack.extentreports.reporter.JsonFormatter;
 import pageObjects.SearchPage;
 import reports.ExtentFactory;
 import com.aventstack.extentreports.ExtentReports;
@@ -11,21 +12,22 @@ import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.support.ui.WebDriverWait;
 
+import java.io.IOException;
 import java.time.Duration;
 
 public class SearchPageTest {
 
     SearchPage searchPage;
     static ExtentSparkReporter info = new ExtentSparkReporter("target/reports/SearchPageTest.html");
-    static ExtentSparkReporter parcial = new ExtentSparkReporter("target/reports/Parcial1.html");
+    static JsonFormatter json = new JsonFormatter("target/json/search.json");
 
     static ExtentReports extent;
 
     @BeforeAll
-    public static void createReport() {
+    public static void createReport() throws IOException {
         extent = ExtentFactory.getInstance();
-        extent.attachReporter(info);
-        extent.attachReporter(parcial);
+        extent.createDomainFromJsonArchive("target/json/search.json");
+        extent.attachReporter(json, info);
     }
 
     @BeforeEach
