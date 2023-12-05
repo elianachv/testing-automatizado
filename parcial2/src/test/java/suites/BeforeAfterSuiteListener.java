@@ -24,8 +24,8 @@ public class BeforeAfterSuiteListener implements TestExecutionListener {
         testPlan.getRoots().forEach(System.out::println);
 
         System.out.println("Generating General Report");
-        ExtentSparkReporter parcial = new ExtentSparkReporter("target/reports/Parcial1.html");
-        ExtentFactory.setExtentTitle("Parcial 1");
+        ExtentSparkReporter parcial = new ExtentSparkReporter("target/reports/Parcial2.html");
+        ExtentFactory.setExtentTitle("Parcial 2");
         ExtentReports extentMerged = ExtentFactory.getInstance();
 
         File jsonDirectory = new File("target/json");

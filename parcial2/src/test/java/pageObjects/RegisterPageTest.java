@@ -37,12 +37,12 @@ public class RegisterPageTest {
         WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(3));
         registerPage = new RegisterPage(driver, wait);
         registerPage.setUp();
-        registerPage.getUrl("https://opencart.abstracta.us/index.php?route=common/home");
+        registerPage.getUrl("https://parabank.parasoft.com/parabank/index.htm");
     }
 
     @Test
     @Tag("Register")
-    @Tag("Parcial1")
+    @Tag("Parcial2")
     @Tag("ALL")
     public void userRegisterSuccessfully() {
         ExtentTest test = extent.createTest("Test Register Process Succesfull");
@@ -51,10 +51,15 @@ public class RegisterPageTest {
         Random random = new Random();
 
         HashMap<String, String> data = new HashMap<>();
-        data.put("name", "Elizabeth");
-        data.put("lastname", "Georges");
-        data.put("telephone", "12345678");
-        data.put("email", "elizabeth" + random.nextLong() + "@test.com");
+        data.put("name", "Octavia");
+        data.put("lastname", "Palafox");
+        data.put("address", "Av Boyaca");
+        data.put("city", "Bogota");
+        data.put("state", "Cundinamarca");
+        data.put("zip", "11001");
+        data.put("phone", "12345678");
+        data.put("ssn", "987654321");
+        data.put("username", "octavia" + random.nextInt());
         data.put("password", "1234");
         data.put("confirm", "1234");
 
@@ -63,19 +68,16 @@ public class RegisterPageTest {
             registerPage.routeRegister();
             test.log(Status.PASS, "Access register page");
 
-            registerPage.fulfillForm(data.get("name"), data.get("lastname"), data.get("email"), data.get("telephone"), data.get("password"), data.get("confirm"));
+            registerPage.fulfillForm(data.get("name"), data.get("lastname"), data.get("address"), data.get("city"), data.get("state"), data.get("zip"), data.get("phone"), data.get("ssn"), data.get("username"), data.get("password"), data.get("confirm"));
             test.log(Status.PASS, "Fulfill form");
-
-            registerPage.suscribeToNewsletter(false);
-            test.log(Status.PASS, "Do not suscribe newsletter");
-
-            registerPage.acceptPrivacyPolice();
-            test.log(Status.PASS, "Accept Privacy Police");
 
             registerPage.continueRegisterProcess();
             test.log(Status.PASS, "Try to continue register process");
 
-            Assertions.assertTrue(registerPage.getWelcomeRegisterMessageText().contains("Congratulations! Your new account has been successfully created!"));
+            Thread.sleep(3000);
+
+            Assertions.assertTrue(registerPage.getWelcomeRegisterTitleText().contains("Welcome " + data.get("username")));
+            Assertions.assertTrue(registerPage.getWelcomeRegisterMessageText().contains("Your account was created successfully. You are now logged in."));
             test.log(Status.PASS, "Validate succesfull register process");
 
         } catch (Exception error) {

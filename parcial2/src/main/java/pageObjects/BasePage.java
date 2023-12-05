@@ -8,13 +8,26 @@ import org.openqa.selenium.support.ui.WebDriverWait;
 
 public class BasePage {
 
+    // Header
+    protected By logo = By.xpath("//*[@id=\"topPanel\"]/a[2]/img");
 
-    protected By logo = By.id("logo");
-    protected By searchBar = By.name("search");
-    protected By searchButton = By.xpath("/html/body/header/div/div/div[2]/div/span/button");
-    protected By myAccountButton = By.xpath("/html/body/nav/div/div[2]/ul/li[2]/a");
-    protected By registerButton = By.xpath("/html/body/nav/div/div[2]/ul/li[2]/ul/li[1]/a");
-    protected By loginButton = By.xpath("//*[@id=\"top-links\"]/ul/li[2]/ul/li[2]/a");
+    // Aside - Pre Login
+    protected By registerButton = By.xpath("//*[@id=\"loginPanel\"]/p[2]/a");
+    protected By userNameInput = By.name("username");
+    protected By passwordInput = By.name("password");
+    protected By loginButton = By.xpath("//*[@id=\"loginPanel\"]/form/div[3]/input");
+
+
+    // Aside Post Login
+    protected By createAccountOption = By.partialLinkText("Open New Account");
+    protected By accountOverviewOption = By.partialLinkText("Accounts Overview");
+    protected By transferFundsOption = By.partialLinkText("Transfer Funds");
+    protected By billPayOption = By.partialLinkText("Bill Pay");
+    protected By findTransactionsOption = By.partialLinkText("Find Transactions");
+    protected By updateContactInfo = By.partialLinkText("Update Contact Info");
+    protected By requestLoanOption = By.partialLinkText("Request Loan");
+    protected By logOutOption =By.partialLinkText("Log Out");
+
 
     public static WebDriver driver;
     public static WebDriverWait wait;
@@ -36,22 +49,18 @@ public class BasePage {
         driver.quit();
     }
 
-    public void searchProduct(String querie) throws InterruptedException {
-        sendText(querie, searchBar);
-        click(searchButton);
-    }
 
     protected WebElement findElement(By locator) {
         wait.until(ExpectedConditions.presenceOfElementLocated(locator));
         return driver.findElement(locator);
     }
 
-    protected void sendText(String inputText, By locator) throws InterruptedException {
+    protected void sendText(String inputText, By locator) {
         this.findElement(locator).clear();
         this.findElement(locator).sendKeys(inputText);
     }
 
-    protected void sendKey(CharSequence key, By locator) throws InterruptedException {
+    protected void sendKey(CharSequence key, By locator) {
         this.findElement(locator).sendKeys(key);
     }
 
@@ -64,14 +73,50 @@ public class BasePage {
         click(logo);
     }
 
+    protected void routeHome() {
+        clickLogo();
+    }
+
     protected void routeRegister() {
-        click(myAccountButton);
         click(registerButton);
     }
 
-    protected void routeLogin() {
-        click(myAccountButton);
+    protected void routeOpenNewAccount() {
+        click(createAccountOption);
+    }
+
+    protected void routeAccountOverview() {
+        click(accountOverviewOption);
+    }
+
+    protected void routeTransferFunds() {
+        click(transferFundsOption);
+    }
+
+    protected void routeBillPay() {
+        click(billPayOption);
+    }
+
+    protected void routeFindTransaction() {
+        click(findTransactionsOption);
+    }
+
+    protected void routeUpdateContactInfo() {
+        click(updateContactInfo);
+    }
+
+    protected void routeRequestLoan() {
+        click(requestLoanOption);
+    }
+
+    protected void login(String username, String password) {
+        sendText(username, userNameInput);
+        sendText(password, passwordInput);
         click(loginButton);
+    }
+
+    protected void logout() {
+        click(logOutOption);
     }
 
     protected String getText(By locator) {
