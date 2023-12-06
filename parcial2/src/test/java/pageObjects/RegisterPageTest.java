@@ -5,6 +5,7 @@ import com.aventstack.extentreports.ExtentTest;
 import com.aventstack.extentreports.Status;
 import com.aventstack.extentreports.reporter.ExtentSparkReporter;
 import com.aventstack.extentreports.reporter.JsonFormatter;
+import constants.Constants;
 import org.junit.jupiter.api.*;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.chrome.ChromeDriver;
@@ -37,12 +38,13 @@ public class RegisterPageTest {
         WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(3));
         registerPage = new RegisterPage(driver, wait);
         registerPage.setUp();
-        registerPage.getUrl("https://parabank.parasoft.com/parabank/index.htm");
+        registerPage.getUrl(Constants.FRONT_BASE_URL + "/index.htm");
     }
 
     @Test
     @Tag("Register")
     @Tag("Parcial2")
+    @Tag("Front")
     @Tag("ALL")
     public void userRegisterSuccessfully() {
         ExtentTest test = extent.createTest("Test Register Process Succesfull");
@@ -79,6 +81,9 @@ public class RegisterPageTest {
             Assertions.assertTrue(registerPage.getWelcomeRegisterTitleText().contains("Welcome " + data.get("username")));
             Assertions.assertTrue(registerPage.getWelcomeRegisterMessageText().contains("Your account was created successfully. You are now logged in."));
             test.log(Status.PASS, "Validate succesfull register process");
+
+            Constants.USER = data.get("username");
+            Constants.PASSWORD = data.get("password");
 
         } catch (Exception error) {
             test.log(Status.FAIL, "Report error in test " + error.getMessage());

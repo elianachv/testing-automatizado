@@ -1,12 +1,13 @@
 package api;
 
+import constants.Constants;
+import io.restassured.http.ContentType;
 import io.restassured.http.Cookie;
-import io.restassured.http.Cookies;
 import io.restassured.path.xml.XmlPath;
 import io.restassured.path.xml.element.NodeChildren;
 import io.restassured.response.Response;
 import org.junit.jupiter.api.*;
-import org.testng.annotations.Ignore;
+import pageObjects.BasePage;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -16,9 +17,9 @@ import static io.restassured.RestAssured.given;
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
 public class LoginBackTest {
 
-    private Cookies cookies;
     private Cookie cookie;
     private List<String> accountId;
+
     private String user;
     private String password;
     private String userId;
@@ -26,19 +27,37 @@ public class LoginBackTest {
     @BeforeAll
     private void setUp() {
 
-        user = "dh-cali98";
-        password = "1234";
+        user = Constants.USER;
+        password = Constants.PASSWORD;
         accountId = new ArrayList<>();
 
         login();
+        loginCookie();
         getAccount();
+    }
+
+
+    public void loginCookie() {
+
+        Response r = given()
+                .contentType(ContentType.URLENC)
+                .formParam("username", user)
+                .formParam("password", password)
+                .urlEncodingEnabled(false)
+                .when()
+                .post(Constants.FRONT_BASE_URL + "/login.htm");
+
+
+        cookie = r.getDetailedCookie("JSESSIONID");
+        System.out.println("Get cookie successfully " + cookie.getValue());
+
     }
 
     public void login() {
 
         Response r = given()
                 .when()
-                .get("https://parabank.parasoft.com/parabank/services/bank/login/" + user + "/" + password);
+                .get(Constants.BACK_BASE_URL + "/login/" + user + "/" + password);
 
         r.then().log().status();
         r.then().log().body();
@@ -52,14 +71,32 @@ public class LoginBackTest {
     }
 
     public void getAccount() {
-        NodeChildren accounts = given()
-                .when()
-                .get("https://parabank.parasoft.com/parabank/services/bank/customers/" + userId + "/accounts/")
-                .then().extract().path("accounts.account.id");
 
-        accounts.list().forEach(a -> accountId.add(a.toString()));
+        try {
 
-        System.out.println(accountId);
+            NodeChildren accounts = given()
+                    .when()
+                    .get(Constants.BACK_BASE_URL + "/customers/" + userId + "/accounts/")
+                    .then().extract().path("accounts.account.id");
+
+            if (accounts.size() > 1)
+                accounts.list().forEach(a -> accountId.add(a.toString()));
+            else
+                accountId.add(accounts.get(0).toString());
+
+        } catch (ClassCastException e) {
+
+            String accounts = given()
+                    .when()
+                    .get(Constants.BACK_BASE_URL + "/customers/" + userId + "/accounts/")
+                    .then().extract().path("accounts.account.id");
+
+            accountId.add(accounts);
+        }
+
+
+        System.out.println("Get accounts succesfully " + accountId);
+
     }
 
     @AfterAll
@@ -67,7 +104,7 @@ public class LoginBackTest {
 
         given()
                 .when()
-                .get("https://parabank.parasoft.com/parabank/logout.htm");
+                .get(Constants.FRONT_BASE_URL + "/logout.htm");
 
         System.out.println("Log out succesfully");
 
@@ -85,14 +122,14 @@ public class LoginBackTest {
                 .queryParam("newAccountType", "1")
                 .queryParam("fromAccountId", accountId.get(0))
                 .when()
-                .post("https://parabank.parasoft.com/parabank/services/bank/createAccount")
+                .post(Constants.BACK_BASE_URL + "/createAccount")
                 .then().statusCode(200)
                 .log().status()
                 .log().body();
 
     }
 
-    @Ignore
+    @Test
     @Tag("Back")
     @Tag("Parcial2")
     @Tag("ALL")
@@ -102,7 +139,7 @@ public class LoginBackTest {
         given()
                 .cookie(cookie)
                 .when()
-                .get("https://parabank.parasoft.com/parabank/overview.htm")
+                .get(Constants.FRONT_BASE_URL + "/overview.htm")
                 .then().statusCode(200)
                 .log().status()
                 .log().body();
@@ -118,7 +155,7 @@ public class LoginBackTest {
 
         given()
                 .when()
-                .get("https://parabank.parasoft.com/parabank/services/bank/customers/" + userId + "/accounts/")
+                .get(Constants.BACK_BASE_URL + "/customers/" + userId + "/accounts/")
                 .then().statusCode(200)
                 .log().status()
                 .log().body();
@@ -134,7 +171,7 @@ public class LoginBackTest {
 
         given()
                 .when()
-                .get("https://parabank.parasoft.com/parabank/services/bank/accounts/" + accountId.get(0) + "/transactions/month/All/type/All")
+                .get(Constants.BACK_BASE_URL + "/accounts/" + accountId.get(0) + "/transactions/month/All/type/All")
                 .then().statusCode(200)
                 .log().status()
                 .log().body();
@@ -153,7 +190,7 @@ public class LoginBackTest {
                 .queryParam("toAccountId", accountId.size() > 1 ? accountId.get(1) : accountId.get(0))
                 .queryParam("amount", "100")
                 .when()
-                .post("https://parabank.parasoft.com/parabank/services/bank/transfer")
+                .post(Constants.BACK_BASE_URL + "/transfer")
                 .then().statusCode(200)
                 .log().status()
                 .log().body();

@@ -5,6 +5,7 @@ import com.aventstack.extentreports.ExtentTest;
 import com.aventstack.extentreports.Status;
 import com.aventstack.extentreports.reporter.ExtentSparkReporter;
 import com.aventstack.extentreports.reporter.JsonFormatter;
+import constants.Constants;
 import org.junit.jupiter.api.*;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.chrome.ChromeDriver;
@@ -35,12 +36,13 @@ public class TransferFundsFormsPageTest {
         WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(3));
         transferFundsFormPage = new TransferFundsFormsPage(driver, wait);
         transferFundsFormPage.setUp();
-        transferFundsFormPage.getUrl("https://parabank.parasoft.com/parabank/index.htm");
-        transferFundsFormPage.login("dh-cali98", "1234");
+        transferFundsFormPage.getUrl(Constants.FRONT_BASE_URL + "/index.htm");
+        transferFundsFormPage.login(Constants.USER, Constants.PASSWORD);
     }
 
     @Test
     @Tag("Parcial2")
+    @Tag("Front")
     @Tag("ALL")
     public void transferFunds() {
         ExtentTest test = extent.createTest("Test transfer funds");
@@ -61,6 +63,7 @@ public class TransferFundsFormsPageTest {
             transferFundsFormPage.transfer();
             test.log(Status.PASS, "Transfer");
 
+            Thread.sleep(3000);
             Assertions.assertTrue(transferFundsFormPage.getTransferResult().contains("Transfer Complete"));
             test.log(Status.PASS, "Validate succesfull account overview");
 

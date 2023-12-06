@@ -5,6 +5,7 @@ import com.aventstack.extentreports.ExtentTest;
 import com.aventstack.extentreports.Status;
 import com.aventstack.extentreports.reporter.ExtentSparkReporter;
 import com.aventstack.extentreports.reporter.JsonFormatter;
+import constants.Constants;
 import org.junit.jupiter.api.*;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.chrome.ChromeDriver;
@@ -37,12 +38,13 @@ public class NewAccountFormPageTest {
         WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(3));
         newAccountFormPage = new NewAccountFormPage(driver, wait);
         newAccountFormPage.setUp();
-        newAccountFormPage.getUrl("https://parabank.parasoft.com/parabank/index.htm");
-        newAccountFormPage.login("dh-cali100", "1234");
+        newAccountFormPage.getUrl(Constants.FRONT_BASE_URL + "/index.htm");
+        newAccountFormPage.login(Constants.USER, Constants.PASSWORD);
     }
 
     @Test
     @Tag("Parcial2")
+    @Tag("Front")
     @Tag("ALL")
     public void createNewAccount() {
         ExtentTest test = extent.createTest("Test create new account succesfully");

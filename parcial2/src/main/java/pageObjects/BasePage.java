@@ -26,7 +26,7 @@ public class BasePage {
     protected By findTransactionsOption = By.partialLinkText("Find Transactions");
     protected By updateContactInfo = By.partialLinkText("Update Contact Info");
     protected By requestLoanOption = By.partialLinkText("Request Loan");
-    protected By logOutOption =By.partialLinkText("Log Out");
+    protected By logOutOption = By.partialLinkText("Log Out");
 
 
     public static WebDriver driver;

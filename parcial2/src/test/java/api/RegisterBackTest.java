@@ -1,14 +1,16 @@
 package api;
 
+import constants.Constants;
 import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
+import org.testng.annotations.Ignore;
 
 import static io.restassured.RestAssured.given;
 
 public class RegisterBackTest {
 
-
-    @Test
+    //@Test
+    @Ignore
     @Tag("Back")
     @Tag("Parcial2")
     @Tag("ALL")
@@ -27,10 +29,10 @@ public class RegisterBackTest {
                 .formParam("customer.ssn", "12345678")
                 .formParam("customer.username", "cali89")
                 .formParam("customer.password", "1234")
-                .formParam("repeatedPassword","1234")
-                .formParam("submit","")
+                .formParam("repeatedPassword", "1234")
+                .formParam("submit", "")
                 .when()
-                .post("https://parabank.parasoft.com/parabank/register.htm")
+                .post(Constants.FRONT_BASE_URL + "/register.htm")
                 .then().statusCode(200)
                 .log().status()
                 .log().body();

@@ -1,7 +1,5 @@
-# DH - Parcial 1 - Testing 2
+# DH - Parcial Final - Testing 2
 
-Parcial de la materia testing 2
+Parcial final de la materia testing 2
 
-Se automatizan los siguientes casos de prueba para la página: https://opencart.abstracta.us/index.php?route=common/home
-* Registro exitoso de un usuario
-* Añadir al carrito el producto ipohone
+Se automatizan 5 casos de prueba para el front y 5 casos de prueba para el back de la página [https://parabank.parasoft.com/parabank/index.htm](https://parabank.parasoft.com/parabank/index.htm)	
