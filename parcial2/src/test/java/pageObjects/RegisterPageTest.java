@@ -61,7 +61,7 @@ public class RegisterPageTest {
         data.put("zip", "11001");
         data.put("phone", "12345678");
         data.put("ssn", "987654321");
-        data.put("username", "octavia" + random.nextInt());
+        data.put("username", "dh" + random.nextInt());
         data.put("password", "1234");
         data.put("confirm", "1234");
 
